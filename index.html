@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Telegram Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+
+  <body
+    style="
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f2f4f7;
+      font-family: Arial, sans-serif;
+    "
+  >
+    <div style="text-align: center">
+      <h2>Login with Telegram</h2>
+
+      <!-- Telegram Login Widget -->
+      <script
+        async
+        src="https://telegram.org/js/telegram-widget.js?22"
+        data-telegram-login="YOUR_BOT_USERNAME"
+        data-size="large"
+        data-userpic="true"
+        data-on-auth="onTelegramAuth"
+      ></script>
+    </div>
+
+    <script>
+      function onTelegramAuth(user) {
+        fetch("/telegram/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("Login Success:", data);
+
+            // Example deep link (optional)
+            // window.location.href = "yourapp://login?token=" + data.token;
+          })
+          .catch((err) => {
+            console.error("Login Failed:", err);
+          });
+      }
+    </script>
+  </body>
+</html>
