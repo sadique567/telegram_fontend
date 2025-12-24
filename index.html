@@ -1,72 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login with Telegram</title>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background: #f2f4f7;
-      font-family: Arial, sans-serif;
-    }
-    .container {
-      text-align: center;
-      padding: 40px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-    h2 {
-      margin-bottom: 30px;
-      color: #333;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h2>Login with Telegram</h2>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login with Telegram</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background: #f2f4f7;
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        text-align: center;
+        padding: 40px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        margin-bottom: 30px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Login with Telegram</h2>
 
-    <!-- Replace YOUR_BOT_USERNAME with your actual bot username (e.g., myapp_bot) -->
-    <script
-      async
-      src="https://telegram.org/js/telegram-widget.js?22"
-      data-telegram-login="YOUR_BOT_USERNAME"
-      data-size="large"
-      data-userpic="true"
-      data-onauth="onTelegramAuth(user)"
-      data-request-access="write">
+      <!-- Replace YOUR_BOT_USERNAME with your actual bot username (e.g., myapp_bot) -->
+      <script
+        async
+        src="https://telegram.org/js/telegram-widget.js?22"
+        data-telegram-login="my_flutter_login8778_bot"
+        data-size="large"
+        data-userpic="true"
+        data-onauth="onTelegramAuth(user)"
+        data-request-access="write"
+      ></script>
+    </div>
+
+    <script type="text/javascript">
+      function onTelegramAuth(user) {
+        fetch("/telegram/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(user),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success) {
+              alert("Login successful! Token: " + data.token);
+              console.log("Full response:", data);
+
+              // Optional: Redirect or send token back to your Flutter app
+              // Example deep link: window.location.href = "yourapp://login?token=" + data.token;
+            } else {
+              alert("Login failed: " + data.message);
+            }
+          })
+          .catch((err) => {
+            console.error("Error:", err);
+            alert("Network error");
+          });
+      }
     </script>
-  </div>
-
-  <script type="text/javascript">
-    function onTelegramAuth(user) {
-      fetch("/telegram/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          alert("Login successful! Token: " + data.token);
-          console.log("Full response:", data);
-
-          // Optional: Redirect or send token back to your Flutter app
-          // Example deep link: window.location.href = "yourapp://login?token=" + data.token;
-        } else {
-          alert("Login failed: " + data.message);
-        }
-      })
-      .catch(err => {
-        console.error("Error:", err);
-        alert("Network error");
-      });
-    }
-  </script>
-</body>
+  </body>
 </html>
