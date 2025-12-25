@@ -4,37 +4,45 @@
     <title>Telegram Login</title>
   </head>
   <body>
-    <script async src="https://telegram.org/js/telegram-widget.js?22"
+    <h1>Login With Telegram</h1>
+    <script
+      async
+      src="https://telegram.org/js/telegram-widget.js?22"
       data-telegram-login="flutter_login_bot"
       data-size="large"
       data-userpic="true"
-      data-onauth="onTelegramAuth(user)">
-    </script>
+      data-onauth="onTelegramAuth(user)"
+    ></script>
 
     <script type="text/javascript">
       function onTelegramAuth(user) {
         console.log("Received user data:", user); // Check this in browser console!
 
-        fetch("https://telegram-login-backend-gup5.onrender.com/telegram-login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(user),
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            console.log("Login successful:", data.user);
-            // For Flutter WebView: pass user data if needed
-            window.location.href = "flutter://login-success?user=" + encodeURIComponent(JSON.stringify(data.user));
-          } else {
-            console.error("Login failed:", data.message);
-            alert("Login failed: " + data.message);
+        fetch(
+          "https://telegram-login-backend-gup5.onrender.com/telegram-login",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(user),
           }
-        })
-        .catch(err => {
-          console.error("Request failed:", err);
-          alert("Network error");
-        });
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success) {
+              console.log("Login successful:", data.user);
+              // For Flutter WebView: pass user data if needed
+              window.location.href =
+                "flutter://login-success?user=" +
+                encodeURIComponent(JSON.stringify(data.user));
+            } else {
+              console.error("Login failed:", data.message);
+              alert("Login failed: " + data.message);
+            }
+          })
+          .catch((err) => {
+            console.error("Request failed:", err);
+            alert("Network error");
+          });
       }
     </script>
   </body>
