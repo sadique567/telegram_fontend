@@ -21,21 +21,64 @@
       h1 {
         color: #0088cc;
       }
+      #user-details {
+        margin-top: 20px;
+        padding: 10px;
+        background: #e9f7ff;
+        border-radius: 5px;
+      }
     </style>
   </head>
   <body>
     <div class="box">
       <h1>Login with Telegram</h1>
       <p>Click below to login</p>
-
       <script
         async
         src="https://telegram.org/js/telegram-widget.js?22"
         data-telegram-login="flutter_login_bot"
         data-size="large"
-        data-userpic="true"
-        data-auth-url="https://telegram-login-backend-gup5.onrender.com/auth-callback"
-      ></script>
+        data-userpic="true"  
+        data-onauth="onTelegramAuth(user)"  
+        >
+        
+        </script>
+        <div id="user-details"></div>  <!-- Added this for showing details -->
     </div>
+
+    <script>
+      function onTelegramAuth(user) {
+        // Send user data to backend API for verification
+        fetch('https://telegram-login-backend-gup5.onrender.com/auth', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(user)
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Login failed');
+          }
+          return response.json();
+        })
+        .then(data => {
+          // Update UI with verified user details
+          const detailsDiv = document.getElementById('user-details');
+          detailsDiv.innerHTML = `
+            <h2 style="color: green;">🎉 Login Successful</h2>
+            <p><b>ID:</b> ${data.id}</p>
+            <p><b>Name:</b> ${data.first_name} ${data.last_name || ''}</p>
+            <p><b>Username:</b> @${data.username || 'N/A'}</p>
+            ${data.photo_url ? `<img src="${data.photo_url}" width="120" style="border-radius:50%;">` : ''}
+          `;
+        })
+        .catch(error => {
+          // Show error on UI
+          const detailsDiv = document.getElementById('user-details');
+          detailsDiv.innerHTML = '<p style="color: red;">❌ Login failed: ' + error.message + '</p>';
+        });
+      }
+    </script>
   </body>
 </html>
