@@ -73,6 +73,35 @@
     </div>
 
     <script>
+      function onTelegramAuth(user) {
+        fetch("https://telegram-login-backend-gup5.onrender.com/auth", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(user),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            document.getElementById("user-details").innerHTML = `
+      <h2>🎉 Login Successful</h2>
+      <p><b>ID:</b> ${data.id}</p>
+      <p><b>Name:</b> ${data.first_name} ${data.last_name || ""}</p>
+      <p><b>Username:</b> @${data.username || "N/A"}</p>
+      ${
+        data.photo_url
+          ? `<img src="${data.photo_url}" width="120" style="border-radius:50%;">`
+          : ""
+      }
+    `;
+          })
+          .catch((err) => {
+            document.getElementById(
+              "user-details"
+            ).innerHTML = `<p style="color:red;">❌ Login Failed</p>`;
+          });
+      }
+    </script> 
+
+    <!-- <script>
       function showLogin() {
         document.getElementById("login-btn").style.display = "block";
       }
@@ -109,6 +138,6 @@
             ).innerHTML = `<p style="color:red;">❌ ${err.message}</p>`;
           });
       }
-    </script>
+    </script> -->
   </body>
 </html>
