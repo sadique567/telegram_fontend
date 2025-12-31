@@ -1,105 +1,89 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Telegram Login</title>
-    <style>
-      body {
-        font-family: Arial;
-        background: #f0f0f0;
-        text-align: center;
-        margin-top: 60px;
-      }
-      .box {
-        background: #fff;
-        padding: 30px;
-        max-width: 420px;
-        margin: auto;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      }
-      .step {
-        margin: 15px 0;
-        padding: 12px;
-        background: #fff3cd;
-        border-radius: 6px;
-        font-size: 14px;
-      }
-      #login-btn {
-        display: none;
-        margin-top: 15px;
-      }
-      #user-details {
-        margin-top: 20px;
-        background: #e9f7ff;
-        padding: 10px;
-        border-radius: 6px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="box">
-      <h2>Login with Telegram</h2>
+<head>
+  <meta charset="UTF-8">
+  <title>Telegram Login</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f4f4;
+      text-align: center;
+      margin-top: 60px;
+    }
+    .card {
+      background: white;
+      width: 320px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: none;
+    }
+    img {
+      border-radius: 50%;
+    }
+  </style>
+</head>
 
-      <div class="step">
-        🔹 <b>Step 1:</b> First time users must start the bot <br /><br />
-        <a href="https://t.me/flutter_login_bot" target="_blank"
-          >👉 Open Telegram Bot & Press START</a
-        >
-      </div>
+<body>
 
-      <div class="step">
-        🔹 <b>Step 2:</b> Come back and login<br />
-        <button onclick="showLogin()">I have started the bot</button>
-      </div>
+<h2>Login with Telegram</h2>
 
-      <div id="login-btn">
-        <script
-          async
-          src="https://telegram.org/js/telegram-widget.js?22"
-          data-telegram-login="flutter_login_bot"
-          data-size="large"
-          data-userpic="true"
-          data-onauth="onTelegramAuth(user)"
-        ></script>
-      </div>
+<!-- TELEGRAM BUTTON -->
+<script async
+  src="https://telegram.org/js/telegram-widget.js?22"
+  data-telegram-login="flutter_login_bot"
+  data-size="large"
+  data-onauth="onTelegramAuth(user)"
+  data-request-access="write">
+</script>
 
-      <div id="user-details"></div>
-    </div>
+<!-- USER UI -->
+<div class="card" id="userCard">
+  <img id="photo" width="80"><br><br>
+  <b id="name"></b><br>
+  <span id="username"></span><br><br>
+  <small id="userid"></small><br><br>
+  <small>JWT stored in localStorage</small>
+</div>
 
-    <script>
-      function showLogin() {
-        document.getElementById("login-btn").style.display = "block";
-      }
+<script>
+function onTelegramAuth(user) {
+  // 1️⃣ Send Telegram data to backend
+  fetch("https://YOUR_BACKEND_URL/auth/telegram", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(user)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (!data.success) {
+      alert("Telegram login failed");
+      return;
+    }
 
-      function onTelegramAuth(user) {
-        fetch("http://localhost:3000/auth/telegram", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(user),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            if (!data.success) throw new Error(data.message);
-            const u = data.user;
-            document.getElementById("user-details").innerHTML = `
-          <h3 style="color:green">🎉 Login Successful</h3>
-          <p><b>ID:</b> ${u.telegram_id}</p>
-          <p><b>Name:</b> ${u.first_name} ${u.last_name}</p>
-          <p><b>Username:</b> @${u.username || "N/A"}</p>
-          ${
-            u.photo_url
-              ? `<img src="${u.photo_url}" width="100" style="border-radius:50%">`
-              : ""
-          }
-        `;
-          })
-          .catch((err) => {
-            document.getElementById(
-              "user-details"
-            ).innerHTML = `<p style="color:red;">❌ ${err.message}</p>`;
-          });
-      }
-    </script>
-  </body>
+    // 2️⃣ Save JWT
+    localStorage.setItem("token", data.token);
+
+    // 3️⃣ Show user data on UI
+    document.getElementById("photo").src = user.photo_url;
+    document.getElementById("name").innerText =
+      user.first_name + " " + (user.last_name || "");
+    document.getElementById("username").innerText =
+      user.username ? "@" + user.username : "No username";
+    document.getElementById("userid").innerText =
+      "Telegram ID: " + user.id;
+
+    document.getElementById("userCard").style.display = "block";
+  })
+  .catch(err => {
+    alert("Server error");
+    console.error(err);
+  });
+}
+</script>
+
+</body>
 </html>
