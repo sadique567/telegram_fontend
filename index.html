@@ -1,89 +1,111 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>Telegram Login</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: #f4f4f4;
-      text-align: center;
-      margin-top: 60px;
-    }
-    .card {
-      background: white;
-      width: 320px;
-      margin: auto;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      display: none;
-    }
-    img {
-      border-radius: 50%;
-    }
-  </style>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Telegram Login</title>
+    <style>
+      body {
+        font-family: Arial;
+        background: #f4f4f4;
+        text-align: center;
+        margin-top: 60px;
+      }
+      .card {
+        background: white;
+        width: 320px;
+        margin: auto;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: none;
+      }
+      img {
+        border-radius: 50%;
+      }
+    </style>
+  </head>
 
-<body>
+  <body>
+    <h2>Login with Telegram</h2>
 
-<h2>Login with Telegram</h2>
-
-<!-- TELEGRAM BUTTON -->
-<script async
+    <!-- TELEGRAM BUTTON -->
+    <!-- <script async
   src="https://telegram.org/js/telegram-widget.js?22"
   data-telegram-login="flutter_login_bot"
   data-size="large"
   data-onauth="onTelegramAuth(user)"
   data-request-access="write">
-</script>
+</script> -->
+    <!-- 93694 64481 -->
+    <script
+      async
+      src="https://telegram.org/js/telegram-widget.js?22"
+      data-telegram-login="flutter_login_bot"
+      data-size="large"
+      data-onauth="onTelegramAuth(user)"
+    ></script>
 
-<!-- USER UI -->
-<div class="card" id="userCard">
-  <img id="photo" width="80"><br><br>
-  <b id="name"></b><br>
-  <span id="username"></span><br><br>
-  <small id="userid"></small><br><br>
-  <small>JWT stored in localStorage</small>
-</div>
+    <script type="text/javascript">
+      function onTelegramAuth(user) {
+        alert(
+          "Logged in as " +
+            user.first_name +
+            " " +
+            user.last_name +
+            " (" +
+            user.id +
+            (user.username ? ", @" + user.username : "") +
+            ")"
+        );
+      }
+    </script>
+    <!-- USER UI -->
+    <div class="card" id="userCard">
+      <img id="photo" width="80" /><br /><br />
+      <b id="name"></b><br />
+      <span id="username"></span><br /><br />
+      <small id="userid"></small><br /><br />
+      <small>JWT stored in localStorage</small>
+    </div>
+<!-- 
+    <script>
+      function onTelegramAuth(user) {
+        // 1️⃣ Send Telegram data to backend
+        fetch("https://YOUR_BACKEND_URL/auth/telegram", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (!data.success) {
+              alert("Telegram login failed");
+              return;
+            }
 
-<script>
-function onTelegramAuth(user) {
-  // 1️⃣ Send Telegram data to backend
-  fetch("https://YOUR_BACKEND_URL/auth/telegram", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(user)
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (!data.success) {
-      alert("Telegram login failed");
-      return;
-    }
+            // 2️⃣ Save JWT
+            localStorage.setItem("token", data.token);
 
-    // 2️⃣ Save JWT
-    localStorage.setItem("token", data.token);
+            // 3️⃣ Show user data on UI
+            document.getElementById("photo").src = user.photo_url;
+            document.getElementById("name").innerText =
+              user.first_name + " " + (user.last_name || "");
+            document.getElementById("username").innerText = user.username
+              ? "@" + user.username
+              : "No username";
+            document.getElementById("userid").innerText =
+              "Telegram ID: " + user.id;
 
-    // 3️⃣ Show user data on UI
-    document.getElementById("photo").src = user.photo_url;
-    document.getElementById("name").innerText =
-      user.first_name + " " + (user.last_name || "");
-    document.getElementById("username").innerText =
-      user.username ? "@" + user.username : "No username";
-    document.getElementById("userid").innerText =
-      "Telegram ID: " + user.id;
+            document.getElementById("userCard").style.display = "block";
+          })
+          .catch((err) => {
+            alert("Server error");
+            console.error(err);
+          });
+      }
+    </script> -->
 
-    document.getElementById("userCard").style.display = "block";
-  })
-  .catch(err => {
-    alert("Server error");
-    console.error(err);
-  });
-}
-</script>
-
-</body>
+  </body>
 </html>
