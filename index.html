@@ -26,7 +26,7 @@
   </head>
 
   <body>
-    <h2>Login with Telegram ms</h2>
+    <h2>Login with Telegram</h2>
 
     <!-- TELEGRAM BUTTON -->
     <!-- <script async
@@ -37,14 +37,15 @@
   data-request-access="write">
 </script> -->
     <!-- 93694 64481 -->
+
     <script
       async
       src="https://telegram.org/js/telegram-widget.js?22"
       data-telegram-login="flutter_login_bot"
       data-size="large"
       data-onauth="onTelegramAuth(user)"
+      data-request-access="write"
     ></script>
-
     <script type="text/javascript">
       function onTelegramAuth(user) {
         alert(
@@ -59,6 +60,7 @@
         );
       }
     </script>
+
     <!-- USER UI -->
     <!-- <div class="card" id="userCard">
       <img id="photo" width="80" /><br /><br />
@@ -67,7 +69,7 @@
       <small id="userid"></small><br /><br />
       <small>JWT stored in localStorage</small>
     </div> -->
-<!-- 
+    <!-- 
     <script>
       function onTelegramAuth(user) {
         // 1️⃣ Send Telegram data to backend
@@ -106,6 +108,5 @@
           });
       }
     </script> -->
-
   </body>
 </html>
