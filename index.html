@@ -4,97 +4,42 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Telegram Login</title>
-
     <style>
       body {
         font-family: Arial, sans-serif;
         background: #f4f4f4;
         text-align: center;
-        margin-top: 80px;
-      }
-
-      .card {
-        background: #fff;
-        width: 320px;
-        margin: 20px auto;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-
-      .hidden {
-        display: none;
-      }
-
-      button {
-        padding: 10px 15px;
-        border: none;
-        background: #e74c3c;
-        color: white;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 10px;
+        margin-top: 100px;
+        color: #333;
       }
     </style>
   </head>
-
   <body>
-    <h2>Login with Telegram (Session Fixed)</h2>
-
-    <!-- Telegram Login Widget -->
-    <div id="loginBox">
-      <script
-        async
-        src="https://telegram.org/js/telegram-widget.js?22"
-        data-telegram-login="flutter_login_bot"
-        data-size="large"
-        data-onauth="onTelegramAuth(user)"
-        data-request-access="write"
+    <h2>Login with Telegram using contect number</h2>
+    <!-- 93694 64481 -->
+    <!-- YEH WIDGET SCRIPT ZAROORI HAI -->
+    <script
+      async
+      src="https://telegram.org/js/telegram-widget.js?22"
+      data-telegram-login="flutter_login_bot"
+      data-size="large"
+      data-onauth="onTelegramAuth(user)"
       ></script>
-    </div>
+      <!-- data-request-access="write" -->
 
-    <!-- User UI -->
-    <div id="userCard" class="card hidden">
-      <h3>Logged In User</h3>
-      <p><strong>Name:</strong> <span id="name"></span></p>
-      <p><strong>ID:</strong> <span id="uid"></span></p>
-      <p><strong>Username:</strong> <span id="username"></span></p>
-      <button onclick="logout()">Logout</button>
-    </div>
-
-    <script>
-      // Telegram auth callback
+    <script type="text/javascript">
       function onTelegramAuth(user) {
-        localStorage.setItem("tg_user", JSON.stringify(user));
-        renderUser(user);
+        alert(
+          "Login successful! Name: " +
+            user.first_name +
+            " " +
+            (user.last_name || "") +
+            "\nID: " +
+            user.id +
+            (user.username ? "\nUsername: @" + user.username : "")
+        );
+        console.log("User data:", user);
       }
-
-      // UI render function
-      function renderUser(user) {
-        document.getElementById("loginBox").classList.add("hidden");
-        document.getElementById("userCard").classList.remove("hidden");
-
-        document.getElementById("name").innerText =
-          user.first_name + " " + (user.last_name || "");
-
-        document.getElementById("uid").innerText = user.id;
-        document.getElementById("username").innerText =
-          user.username ? "@" + user.username : "Not available";
-      }
-
-      // Logout
-      function logout() {
-        localStorage.removeItem("tg_user");
-        location.reload();
-      }
-
-      // Session restore on page load
-      window.onload = () => {
-        const savedUser = localStorage.getItem("tg_user");
-        if (savedUser) {
-          renderUser(JSON.parse(savedUser));
-        }
-      };
     </script>
   </body>
 </html>
