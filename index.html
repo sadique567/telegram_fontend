@@ -1,4 +1,31 @@
- <!DOCTYPE html>
+<script
+  async
+  src="https://telegram.org/js/telegram-widget.js"
+  data-telegram-login="flutter_login_bot"
+  data-size="large"
+  data-on-auth="onTelegramAuth">
+</script>
+
+<script>
+function onTelegramAuth(user) {
+  fetch("https://telegram1auth.onrender.com/auth/telegram", {
+    method: "POST",
+    credentials: "include", // 🔥 REQUIRED
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(user),
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      window.location.href = "/dashboard.html";
+    }
+  });
+}
+</script>
+
+
+
+ <!-- <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -16,9 +43,9 @@
   </head>
   <body>
     <h2>Login with Telegram using contect number</h2>
-       <!-- 93694 64481 -->
+     93694 64481 -->
     <!-- YEH WIDGET SCRIPT ZAROORI HAI -->
- <script
+   <!-- <script
       async
       src="https://telegram.org/js/telegram-widget.js?22"
       data-telegram-login="flutter_login_bot"
@@ -42,4 +69,4 @@
       }
     </script>
   </body>
-</html> 
+</html>  -->
